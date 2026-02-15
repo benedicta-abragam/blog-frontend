@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import  auth  from "../config/firebase";
 function Login() {
     const navigate = useNavigate()
     const [email, setEmail] = useState('');
@@ -8,6 +9,11 @@ function Login() {
 
     useEffect(() => {
         window.scrollTo(0, 0);
+           auth.onAuthStateChanged((user)=>{
+    if(user){
+   navigate("/home")
+    }
+   })
     }, []);
 
     const handleLogin = (e) => {
@@ -15,7 +21,7 @@ function Login() {
 
         // Simulate login process
         console.log('User logged in:', { email, password });
-
+      signInWithEmailAndPassword(auth,email,password)
         // Redirect to homepage/dashboard after login
         // Replace '/home' with your homepage route
         navigate('/home');

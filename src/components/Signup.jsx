@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import  auth  from "../config/firebase";
+import { createUserWithEmailAndPassword} from "firebase/auth"
 function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -8,6 +9,14 @@ function Signup() {
     const [error, setError] = useState('');
     const navigate = useNavigate(); // Hook from React Router for navigation
 
+     useEffect(() => {
+       
+           auth.onAuthStateChanged((user)=>{
+    if(user){
+   navigate("/home")
+    }
+   })
+    }, []);
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -17,6 +26,11 @@ function Signup() {
             return;
         }
 
+        createUserWithEmailAndPassword(auth,email,password).then(function(res){
+            console.log(res)
+        }).catch(function(){
+            console.log("Failed")
+        })
         // Simulate user registration process
         console.log('User registered:', { email, password });
         // After registration, redirect to the login page
